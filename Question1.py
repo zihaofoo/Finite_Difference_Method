@@ -144,12 +144,13 @@ A[ANode_i, int(Node[N_xi-1,N_eta-1])] = 1.0
 u_sol = linalg.spsolve(A,RHS)
 u_sol = u_sol.reshape((N_xi, N_eta))
 # print("U_sol:", u_sol)
-Q = 0.0
 
+Q = 0.0
 for k1 in range(N_xi):
     for k2 in range(N_eta):
-        Q = Q + d_xi * d_eta * u_sol[k1, k2] * hh * (0.5 * bb + aa * d_eta * (k2-1))
-print("Q is:", Q)
+        Q_const = hh * (0.5 * bb + aa * d_eta * (k2))
+        Q = Q + (d_xi * d_eta * u_sol[k1, k2] * Q_const)
+print("Full Cross-sectional Q is:", 2*Q)
 
 # time2 = time.time()
 # print("Duration:", time2-time1)
