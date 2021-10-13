@@ -166,13 +166,18 @@ x_grid = 0.5 * bb * xi_grid + aa * xi_grid * eta_grid
 y_grid = hh * eta_grid
 
 # print(x_grid, y_grid)
-color_ticks = np.arange(0, 0.22, 0.02)
+contour_ticks = np.arange(0.00, 0.22, 0.02)
+color_ticks = np.arange(0.02, 0.22, 0.02)
+
 fig, ax = plt.subplots()
 cs = ax.contour(x_grid, y_grid, u_sol, levels=color_ticks, colors='red', linestyles='dashed')
 plt.clabel(cs, inline=True, fontsize=10)
-cp = ax.contourf(x_grid, y_grid, u_sol, levels=color_ticks)
+cp = ax.contourf(x_grid, y_grid, u_sol, levels=contour_ticks)
 cbar = fig.colorbar(cp)
 plt.savefig("Fig1D.png", dpi=600)
+ax.set_xlabel("x")
+ax.set_ylabel("y")
+ax.set_title("Finite difference solution for N = 21")
 plt.show()
 
 # return Solution, FlowRate, I_xx
