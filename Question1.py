@@ -5,22 +5,21 @@ date = "Oct 2021"
 
 import numpy as np
 import scipy as sp
-from scipy import linalg
-# from scipy.sparse import linalg
+from scipy.sparse import linalg
 from scipy import sparse
 import matplotlib.pyplot as plt
 import pandas as pd
 import time
 
-# def ChannelFlow(N_xi, N_eta, bb, hh):
+# def ChannelFlow(N_xi, N_eta, bb, hh, ll):
 
-time1 = time.time()
-N_xi = 161
-N_eta = 161 
+N_xi = 21
+N_eta = 21 
 bb = 0.5        # in x domain
 hh = 1.0        # in y domain
 ll = 3.0
 aa = np.sqrt(0.25 * ((ll - bb)**2) - (hh**2))
+# time1 = time.time()
 
 # Inputs:
 # N_xi : Number Of nodes in the xi direction.
@@ -38,8 +37,7 @@ d_eta = 1.0/(N_eta-1);           # delta eta
 NumNodes = N_xi * N_eta;   
 
 # Initializing sparse matrices 'A' and 'Node' (coefficient value at i,j)
-A = np.zeros((NumNodes, NumNodes), dtype=float)  
-# A = sparse.lil_matrix((NumNodes, NumNodes), dtype=float)
+A = sparse.lil_matrix((NumNodes, NumNodes), dtype=float)
 Node = np.arange(0, NumNodes, 1, dtype=float)
 Node = Node.reshape((N_xi, N_eta)).T
 RHS = np.zeros((NumNodes,1), dtype=float)       # Vector of b (nx x ny, 1)
@@ -64,7 +62,6 @@ for i1 in range(1,N_xi-1):
 
         # Local coefficients @ (i1, i2)
         c1 = aa**2.0 * xi_local**2.0 + (hh**2.0)
-        # print(c1)
         c2 = (0.5 * aa * bb * xi_local) + ((aa**2) * eta_local * xi_local)
         c3 = ((0.5 * bb) + (aa * eta_local))**2
         c4 = 0
@@ -86,7 +83,6 @@ for i1 in range(1,N_xi-1):
 for j1 in range(1,N_xi-1):
     j2 = 0                           # First row at the bottom
     ANode_i = int(Node[j1,j2])       # Setting A_Matrix position for node i,j   
-    # print(j1, j2, ANode_i)
     A[ANode_i, int(Node[j1,j2])] = 1.0
 
 # Top domain A'D'
@@ -95,23 +91,23 @@ for j1 in range(1,N_xi-1):
     ANode_i = int(Node[j1,j2])       # Setting A_Matrix position for node i,j   
 
     if j1 == N_xi - 2:
-        A[ANode_i, int(Node[j1-1,j2])] = (0.5 * (j1 - 1) * aa) ## Replace
-        A[ANode_i, int(Node[j1,j2])] = (0.5 * bb + aa) * (1.5 / d_eta) ## Replace
-        A[ANode_i, int(Node[j1+1,j2])] = (-0.5 * (j1 - 1) * aa) ## Replace
-        A[ANode_i, int(Node[j1,j2-1])] = (0.5 * bb + aa) * (-2.0 / d_eta) ## Replace
-        A[ANode_i, int(Node[j1,j2-2])] = (0.5 * bb + aa) * (0.5 / d_eta) ## Replace
+        A[ANode_i, int(Node[j1-1,j2])] = (0.5 * (j1 - 1) * aa) 
+        A[ANode_i, int(Node[j1,j2])] = (0.5 * bb + aa) * (1.5 / d_eta) 
+        A[ANode_i, int(Node[j1+1,j2])] = (-0.5 * (j1 - 1) * aa) 
+        A[ANode_i, int(Node[j1,j2-1])] = (0.5 * bb + aa) * (-2.0 / d_eta) 
+        A[ANode_i, int(Node[j1,j2-2])] = (0.5 * bb + aa) * (0.5 / d_eta)
     else:
-        A[ANode_i, int(Node[j1,j2])] = (1.5 * (j1 - 1) * aa ) + ((0.5 * bb + aa) * (1.5 / d_eta)) ##  KEY POINT 1
-        A[ANode_i, int(Node[j1+1,j2])] = -2.0 * aa * (j1-1) ## Replace
-        A[ANode_i, int(Node[j1+2,j2])] = 0.5 * (j1-1) * aa ## Replace
-        A[ANode_i, int(Node[j1,j2-1])] = (0.5 * bb + aa) * (-2.0 / d_eta) ## Replace
-        A[ANode_i, int(Node[j1,j2-2])] = (0.5 * bb + aa) * (0.5 / d_eta) ## Replace
+        A[ANode_i, int(Node[j1,j2])] = (1.5 * (j1 - 1) * aa ) + ((0.5 * bb + aa) * (1.5 / d_eta)) 
+        A[ANode_i, int(Node[j1+1,j2])] = -2.0 * aa * (j1-1) 
+        A[ANode_i, int(Node[j1+2,j2])] = 0.5 * (j1-1) * aa 
+        A[ANode_i, int(Node[j1,j2-1])] = (0.5 * bb + aa) * (-2.0 / d_eta) 
+        A[ANode_i, int(Node[j1,j2-2])] = (0.5 * bb + aa) * (0.5 / d_eta) 
 
 # Left domain A'B'
 for j2 in range(1,N_eta-1):    
     j1 = 0
     ANode_i = int(Node[j1,j2])       # Setting A_Matrix position for node i,j   
-    A[ANode_i, int(Node[j1,j2])] = -1.5 / d_xi ## Replace
+    A[ANode_i, int(Node[j1,j2])] = -1.5 / d_xi 
     A[ANode_i, int(Node[j1+1,j2])] = 2.0 / d_xi 
     A[ANode_i, int(Node[j1+2,j2])] = -0.5 / d_xi 
 
@@ -133,11 +129,11 @@ A[ANode_i, int(Node[N_xi-1,0])] = 1.0
 lfcorner_x = 0
 lfcorner_y = N_eta-1
 ANode_i = int(Node[lfcorner_x, lfcorner_y ])
-A[ANode_i, int(Node[lfcorner_x, lfcorner_y ])] = (1.5 * (lfcorner_x - 1) * aa ) + ((0.5 * bb + aa) * (1.5 / d_eta)) ## Replace
-A[ANode_i, int(Node[lfcorner_x+1, lfcorner_y ])] = -2.0 * aa * (lfcorner_x-1) ## Replace
-A[ANode_i, int(Node[lfcorner_x+2, lfcorner_y ])] = 0.5 * (lfcorner_x-1) * aa ## Replace
-A[ANode_i, int(Node[lfcorner_x, lfcorner_y-1])] = (0.5 * bb + aa) * (-2.0 / d_eta) ## Replace
-A[ANode_i, int(Node[lfcorner_x, lfcorner_y-2])] = (0.5 * bb + aa) * (0.5 / d_eta) ## Replace
+A[ANode_i, int(Node[lfcorner_x, lfcorner_y ])] = (1.5 * (lfcorner_x - 1) * aa ) + ((0.5 * bb + aa) * (1.5 / d_eta))
+A[ANode_i, int(Node[lfcorner_x+1, lfcorner_y ])] = -2.0 * aa * (lfcorner_x-1) 
+A[ANode_i, int(Node[lfcorner_x+2, lfcorner_y ])] = 0.5 * (lfcorner_x-1) * aa 
+A[ANode_i, int(Node[lfcorner_x, lfcorner_y-1])] = (0.5 * bb + aa) * (-2.0 / d_eta) 
+A[ANode_i, int(Node[lfcorner_x, lfcorner_y-2])] = (0.5 * bb + aa) * (0.5 / d_eta) 
 
 # Top right corner point
 ANode_i = int(Node[N_xi-1,N_eta-1])
@@ -145,26 +141,38 @@ A[ANode_i, int(Node[N_xi-1,N_eta-1])] = 1.0
 # np.savetxt("MatrixA.csv", A, delimiter=",")
 # print(A, RHS) 
 
-u_sol = linalg.solve(A,RHS)
-# u_sol = linalg.spsolve(A,RHS)
+u_sol = linalg.spsolve(A,RHS)
 u_sol = u_sol.reshape((N_xi, N_eta))
 # print("U_sol:", u_sol)
 Q = 0.0
 
 for k1 in range(N_xi):
     for k2 in range(N_eta):
-        Q = Q + d_xi * d_eta * u_sol[k1, k2]
+        Q = Q + d_xi * d_eta * u_sol[k1, k2] * hh * (0.5 * bb + aa * d_eta * (k2-1))
 print("Q is:", Q)
-time2 = time.time()
-print("Duration:", time2-time1)
+
+# time2 = time.time()
+# print("Duration:", time2-time1)
 
 xi_vec = np.arange(0, N_xi, 1) * d_xi
 eta_vec = np.arange(0, N_xi, 1) * d_xi
 
-xi_eta_grid = np.meshgrid(xi_vec, eta_vec)
+xi_grid, xi_grid_T = np.meshgrid(xi_vec, xi_vec)
+eta_grid_T, eta_grid = np.meshgrid(eta_vec, eta_vec)
+
+# print(xi_grid, eta_grid)
+
+x_grid = 0.5 * bb * xi_grid + aa * xi_grid * eta_grid
+y_grid = hh * eta_grid
+
+# print(x_grid, y_grid)
+color_ticks = np.arange(0, 0.22, 0.02)
 fig, ax = plt.subplots()
-cs = ax.contourf(xi_vec, eta_vec, u_sol)
-cbar = fig.colorbar(cs)
+cs = ax.contour(x_grid, y_grid, u_sol, levels=color_ticks, colors='red', linestyles='dashed')
+plt.clabel(cs, inline=True, fontsize=10)
+cp = ax.contourf(x_grid, y_grid, u_sol, levels=color_ticks)
+cbar = fig.colorbar(cp)
+plt.savefig("Fig1D.png", dpi=600)
 plt.show()
 
 # return Solution, FlowRate, I_xx
