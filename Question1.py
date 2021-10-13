@@ -149,7 +149,7 @@ Q = 0.0
 for k1 in range(N_xi):
     for k2 in range(N_eta):
         Q_const = hh * (0.5 * bb + aa * d_eta * (k2))
-        Q = Q + (d_xi * d_eta * u_sol[k1, k2] * Q_const)
+        Q = Q + (d_xi * d_eta * u_sol.T[k1,k2] * Q_const)
 print("Full Cross-sectional Q is:", 2*Q)
 
 # time2 = time.time()
