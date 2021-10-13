@@ -5,14 +5,18 @@ date = "Oct 2021"
 
 import numpy as np
 import scipy as sp
-import scipy.linalg as linalg
+from scipy import linalg
+# from scipy.sparse import linalg
+from scipy import sparse
 import matplotlib.pyplot as plt
 import pandas as pd
+import time
 
 # def ChannelFlow(N_xi, N_eta, bb, hh):
 
-N_xi = 321
-N_eta = 321
+time1 = time.time()
+N_xi = 161
+N_eta = 161 
 bb = 0.5        # in x domain
 hh = 1.0        # in y domain
 ll = 3.0
@@ -35,6 +39,7 @@ NumNodes = N_xi * N_eta;
 
 # Initializing sparse matrices 'A' and 'Node' (coefficient value at i,j)
 A = np.zeros((NumNodes, NumNodes), dtype=float)  
+# A = sparse.lil_matrix((NumNodes, NumNodes), dtype=float)
 Node = np.arange(0, NumNodes, 1, dtype=float)
 Node = Node.reshape((N_xi, N_eta)).T
 RHS = np.zeros((NumNodes,1), dtype=float)       # Vector of b (nx x ny, 1)
@@ -50,7 +55,7 @@ for i1 in range(N_xi):
 for i1 in range(1,N_xi-1):
     for i2 in range(1,N_eta-1):
         # Point (xi, eta) = (i1, i2)
-        # Iterate through all iterior points
+        # Iterate through all interior points
         ANode_i = Node[i1,i2];                       # Setting A_Matrix position for node i,j   
         ANode_i = int(ANode_i)
 
@@ -137,12 +142,11 @@ A[ANode_i, int(Node[lfcorner_x, lfcorner_y-2])] = (0.5 * bb + aa) * (0.5 / d_eta
 # Top right corner point
 ANode_i = int(Node[N_xi-1,N_eta-1])
 A[ANode_i, int(Node[N_xi-1,N_eta-1])] = 1.0
-np.savetxt("MatrixA.csv", A, delimiter=",")
-
-# print(np.linalg.matrix_rank(A))
+# np.savetxt("MatrixA.csv", A, delimiter=",")
 # print(A, RHS) 
 
 u_sol = linalg.solve(A,RHS)
+# u_sol = linalg.spsolve(A,RHS)
 u_sol = u_sol.reshape((N_xi, N_eta))
 # print("U_sol:", u_sol)
 Q = 0.0
@@ -151,13 +155,17 @@ for k1 in range(N_xi):
     for k2 in range(N_eta):
         Q = Q + d_xi * d_eta * u_sol[k1, k2]
 print("Q is:", Q)
+time2 = time.time()
+print("Duration:", time2-time1)
 
 xi_vec = np.arange(0, N_xi, 1) * d_xi
 eta_vec = np.arange(0, N_xi, 1) * d_xi
 
+xi_eta_grid = np.meshgrid(xi_vec, eta_vec)
 fig, ax = plt.subplots()
 cs = ax.contourf(xi_vec, eta_vec, u_sol)
 cbar = fig.colorbar(cs)
 plt.show()
+
 # return Solution, FlowRate, I_xx
 
