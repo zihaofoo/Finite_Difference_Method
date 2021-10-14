@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import time
 
-# def ChannelFlow(N_xi, N_eta, bb, hh, ll):
+## def ChannelFlow(N_xi, N_eta, bb, hh, ll):
 
 N_xi = 21
 N_eta = 21 
@@ -150,7 +150,7 @@ for k1 in range(N_xi):
     for k2 in range(N_eta):
         Q_const = hh * (0.5 * bb + aa * d_eta * (k2))
         Q = Q + (d_xi * d_eta * u_sol.T[k1,k2] * Q_const)
-print("Full Cross-sectional Q is:", 2*Q)
+print("Full Cross-sectional Q for N =", N_xi, "is:", 2*Q)
 
 # time2 = time.time()
 # print("Duration:", time2-time1)
@@ -167,6 +167,7 @@ x_grid = 0.5 * bb * xi_grid + aa * xi_grid * eta_grid
 y_grid = hh * eta_grid
 
 # print(x_grid, y_grid)
+"""
 contour_ticks = np.arange(0.00, 0.22, 0.02)
 color_ticks = np.arange(0.02, 0.22, 0.02)
 
@@ -180,6 +181,6 @@ ax.set_xlabel("x")
 ax.set_ylabel("y")
 ax.set_title("Finite difference solution for N = 21")
 plt.show()
-
+"""
 # return Solution, FlowRate, I_xx
 
