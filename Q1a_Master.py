@@ -8,7 +8,7 @@ from scipy.sparse import linalg
 from scipy import sparse
 import matplotlib.pyplot as plt
 import pandas as pd
-from Q1_Sub import ChannelFlow
+from Q1a_Sub import ChannelFlow
 
 N = np.array([11, 21, 41, 81, 161, 321])
 # N = np.arange(11, 161, 10)
