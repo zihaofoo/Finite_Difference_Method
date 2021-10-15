@@ -24,12 +24,12 @@ Q = Q - 0.11496
 alp = np.zeros(len(Q)-1)
 for i2 in range(len(Q)-1):
     alp[i2] = np.log(Q[i2+1] / Q[i2]) / np.log(N[i2+1] / N[i2])
-    
+print(alp)
+
 y_N = N**(-2.0)
 fig, ax = plt.subplots()
-ax.loglog(N, Q, color='red')
-# ax.loglog(N, y_N, color='black')
+ax.loglog(N, Q, color='red', label='Q (Convergence)')
+ax.loglog(N, y_N, color='black', label='alpha = 2')
+plt.legend()
 plt.show()
 
-print(alp)
-# print(u_sol)
