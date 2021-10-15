@@ -13,7 +13,7 @@ import pandas as pd
 def ChannelFlow(N_xi, N_eta, bb, hh, ll):
     # Inputs:
     # N_xi : Number Of nodes in the xi direction.
-    # N_eta: Number of nodes int he eta directionpython3 --version
+    # N_eta: Number of nodes in the eta direction
     # bb : The length of the base
     # hh : the height of the channel
 
@@ -135,20 +135,19 @@ def ChannelFlow(N_xi, N_eta, bb, hh, ll):
     A[ANode_i, int(Node[N_xi-1,N_eta-1])] = 1.0
 
     u_sol = linalg.spsolve(A,RHS)
-    u_sol_matrix = u_sol.reshape((N_xi, N_eta))
+    u_sol_matrix = u_sol.reshape((N_xi, N_eta)).T
 
     Q = 0.0
     for k1 in range(N_xi):
         for k2 in range(N_eta):
             Q_const = hh * (0.5 * bb + aa * d_eta * (k2))
-            Q = Q + (d_xi * d_eta * u_sol_matrix.T[k1,k2] * Q_const)
+            Q = Q + (d_xi * d_eta * u_sol_matrix[k1,k2] * Q_const)
     # print("Full Cross-sectional Q for N =", N_xi, "is:", 2*Q)
 
     xi_vec = np.arange(0, N_xi, 1) * d_xi
     eta_vec = np.arange(0, N_xi, 1) * d_xi
 
-    xi_grid, xi_grid_T = np.meshgrid(xi_vec, xi_vec)
-    eta_grid_T, eta_grid = np.meshgrid(eta_vec, eta_vec)
+    eta_grid, xi_grid = np.meshgrid(xi_vec, xi_vec)
     x_grid = 0.5 * bb * xi_grid + aa * xi_grid * eta_grid
     y_grid = hh * eta_grid
 
