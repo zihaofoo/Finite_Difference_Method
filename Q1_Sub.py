@@ -85,19 +85,21 @@ def ChannelFlow(N_xi, N_eta, bb, hh, ll):
         j2 = N_eta - 1
         ANode_i = int(Node[j1,j2])       # Setting A_Matrix position for node i,j   
 
-        if j1 == N_xi - 2:
-            A[ANode_i, int(Node[j1-1,j2])] = (0.5 * (j1 - 1) * aa) 
-            A[ANode_i, int(Node[j1,j2])] = (0.5 * bb + aa) * (1.5 / d_eta) 
-            A[ANode_i, int(Node[j1+1,j2])] = (-0.5 * (j1 - 1) * aa) 
-            A[ANode_i, int(Node[j1,j2-1])] = (0.5 * bb + aa) * (-2.0 / d_eta) 
-            A[ANode_i, int(Node[j1,j2-2])] = (0.5 * bb + aa) * (0.5 / d_eta)
+        # if j1 == N_xi - 2:
+        A[ANode_i, int(Node[j1-1,j2])] = (0.5 * (j1 - 1) * aa) 
+        A[ANode_i, int(Node[j1,j2])] = (0.5 * bb + aa) * (1.5 / d_eta) 
+        A[ANode_i, int(Node[j1+1,j2])] = (-0.5 * (j1 - 1) * aa) 
+        A[ANode_i, int(Node[j1,j2-1])] = (0.5 * bb + aa) * (-2.0 / d_eta) 
+        A[ANode_i, int(Node[j1,j2-2])] = (0.5 * bb + aa) * (0.5 / d_eta)
+        
+        """
         else:
             A[ANode_i, int(Node[j1,j2])] = (1.5 * (j1 - 1) * aa ) + ((0.5 * bb + aa) * (1.5 / d_eta)) 
             A[ANode_i, int(Node[j1+1,j2])] = -2.0 * aa * (j1-1) 
             A[ANode_i, int(Node[j1+2,j2])] = 0.5 * (j1-1) * aa 
             A[ANode_i, int(Node[j1,j2-1])] = (0.5 * bb + aa) * (-2.0 / d_eta) 
             A[ANode_i, int(Node[j1,j2-2])] = (0.5 * bb + aa) * (0.5 / d_eta) 
-
+        """
     # Left domain A'B'
     for j2 in range(1,N_eta-1):    
         j1 = 0
