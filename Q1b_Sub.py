@@ -110,15 +110,22 @@ D = np.diag(np.diag(A.toarray()))
 L = np.tril(A.toarray(), k=-1)
 U = np.triu(A.toarray(), k=1)
 I = np.identity(NumNodes, dtype=float)
-D_inv = linalg.inv(D)
-R = I - (D_inv @ A)
 # np.savetxt('data.csv', L, delimiter=',')
 
-N_iter = 100
+N_iter = 1000
 u_sol = np.zeros((NumNodes,1), dtype=float)       # Vector of f (nx x ny, 1)
-omega = 1
+omega = 0.5
+# method = 'Jacobi'
+method = 'Gauss'
 for t1 in range(N_iter):
-    u_sol = (omega * ((R @ u_sol) + (D_inv @ RHS))) + ((1.0 - omega) * u_sol)
+    if method == 'Jacobi':
+        D_inv = linalg.inv(D)
+        R = I - (D_inv @ A)
+        u_sol = (omega * ((R @ u_sol) + (D_inv @ RHS))) + ((1.0 - omega) * u_sol)
+    elif method == 'Gauss':
+        D_L_inv = linalg.inv(D - L)
+        R = linalg.inv(D_L_inv) @ U 
+        u_sol = (omega * ((R @ u_sol) + (D_L_inv @ RHS))) + ((1.0 - omega) * u_sol)
 
 # Linear sparse solver (for checking only)
 # u_sol = splinalg.spsolve(A,RHS)
