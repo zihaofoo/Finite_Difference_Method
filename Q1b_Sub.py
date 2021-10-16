@@ -107,25 +107,28 @@ for s1 in range(Source_block.shape[0]):
             RHS[ANode_i] = 1.0   # Equation on RHS
 
 D = np.diag(np.diag(A.toarray()))
-L = np.tril(A.toarray(), k=-1)
-U = np.triu(A.toarray(), k=1)
+L = np.tril(-A.toarray(), k=-1)
+U = np.triu(-A.toarray(), k=1)
 I = np.identity(NumNodes, dtype=float)
 # np.savetxt('data.csv', L, delimiter=',')
 
-N_iter = 1000
+N_iter = 10000
 u_sol = np.zeros((NumNodes,1), dtype=float)       # Vector of f (nx x ny, 1)
-omega = 0.5
+omega = 2.0/3
 # method = 'Jacobi'
 method = 'Gauss'
+
+if method == 'Jacobi':
+    D_inv = linalg.inv(D)
+    R = I - (D_inv @ A)    
+    f = D_inv @ RHS
+elif method == 'Gauss':
+    D_L_inv = linalg.inv(D - L)
+    R = D_L_inv @ U   
+    f = D_L_inv @ RHS
+
 for t1 in range(N_iter):
-    if method == 'Jacobi':
-        D_inv = linalg.inv(D)
-        R = I - (D_inv @ A)
-        u_sol = (omega * ((R @ u_sol) + (D_inv @ RHS))) + ((1.0 - omega) * u_sol)
-    elif method == 'Gauss':
-        D_L_inv = linalg.inv(D - L)
-        R = linalg.inv(D_L_inv) @ U 
-        u_sol = (omega * ((R @ u_sol) + (D_L_inv @ RHS))) + ((1.0 - omega) * u_sol)
+    u_sol = (omega * ((R @ u_sol) + f)) + ((1.0 - omega) * u_sol)
 
 # Linear sparse solver (for checking only)
 # u_sol = splinalg.spsolve(A,RHS)
