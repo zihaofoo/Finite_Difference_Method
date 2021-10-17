@@ -24,11 +24,9 @@ def Solver_Iter(Source_block, N_x, N_y, omega, method, N_iter):
     NumNodes_interior = int((N_x - 1) / 6) - 1    # Number of interior nodes per block 
 
     # Initializing sparse matrices 'A' and 'Node' (coefficient value at i,j)
-    A = sparse.lil_matrix((NumNodes, NumNodes), dtype=float)
+    A = sparse.lil_matrix((NumNodes, NumNodes), dtype=np.double)
     Node = np.arange(0, NumNodes, 1, dtype=float)
     Node = Node.reshape((N_x, N_y)).T
-
-    # print(Node[2,0])
     RHS = np.zeros((NumNodes,1), dtype=float)       # Vector of f (nx x ny, 1)
 
     # Interior points of matrix A 
@@ -113,7 +111,7 @@ def Solver_Iter(Source_block, N_x, N_y, omega, method, N_iter):
     I = np.identity(NumNodes, dtype=float)
 
     # N_iter = 10000
-    u_sol = np.zeros((NumNodes,1), dtype=float)       # Vector of f (nx x ny, 1)
+    u_sol = np.zeros((NumNodes,1), dtype=float)   # Vector of f (nx x ny, 1)
 
     # omega = 2.0/3
     # method = 'Jacobi'
@@ -131,7 +129,7 @@ def Solver_Iter(Source_block, N_x, N_y, omega, method, N_iter):
 
     for t1 in range(N_iter):
         u_sol = (omega * ((R @ u_sol) + f)) + ((1.0 - omega) * u_sol)
-        err_sol[t1] = linalg.norm((A @ u_sol - RHS), ord=2) 
+        err_sol[t1] = linalg.norm(np.double(A @ u_sol - RHS), ord=2) 
 
     # Linear sparse solver (for checking only)
     # u_sol = splinalg.spsolve(A,RHS)

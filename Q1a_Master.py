@@ -12,11 +12,11 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from Q1a_Sub import ChannelFlow
 
-N = np.array([21, 41, 81])
+N = np.array([11, 21, 41])
 N_base = N[0]
-N_ref = 161
+N_ref = 81
 # N = np.arange(11, 161, 10)
-bb = 0.5       # in x domain
+bb = 0.5      # in x domain
 hh = 1.0        # in y domain
 ll = 3.0
 Q = np.zeros(len(N), dtype=float)
@@ -52,5 +52,7 @@ ax.loglog(N, y_N, color='black', label='alpha = 2', linestyle='dashed')
 ax.set_xlabel('N')
 ax.set_ylabel('Q')
 ax.set_title('l = ' + str(ll) + ', b = ' + str(bb) + ', h =' + str(hh))
+ax.set_ybound(lower = 1E-01, upper = 1E-05)
 plt.legend()
+plt.savefig(fname= str(bb) + 'convergence.PDF')
 plt.show()
