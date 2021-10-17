@@ -10,7 +10,7 @@ from scipy import sparse
 import matplotlib.pyplot as plt
 import pandas as pd
 
-def ChannelFlow(N_xi, N_eta, bb, hh, ll):
+def ChannelFlow(N_xi, N_eta, bb, hh, ll, N_base):
     # Inputs:
     # N_xi : Number Of nodes in the xi direction.
     # N_eta: Number of nodes in the eta direction
@@ -139,6 +139,17 @@ def ChannelFlow(N_xi, N_eta, bb, hh, ll):
     u_sol = linalg.spsolve(A,RHS)
     u_sol_matrix = u_sol.reshape((N_xi, N_eta)).T
 
+    # Create 11 x 11 vector for u_sol
+    skip_factor = int((N_xi - 1) / (N_base - 1)) # Number of interior points to skip
+    u_sol_coarse = []
+
+    for k1 in range(0, N_xi, skip_factor):
+        for k2 in range(0, N_eta, skip_factor):
+            ANode_i = Node[k2,k1];                       # Setting A_Matrix position for node i,j   
+            ANode_i = int(ANode_i)
+            u_sol_coarse.append(u_sol[ANode_i])
+    u_sol_coarse = np.array(u_sol_coarse)
+
     Q = 0.0
     for k1 in range(N_xi-1):
         for k2 in range(N_eta-1):
@@ -170,5 +181,5 @@ def ChannelFlow(N_xi, N_eta, bb, hh, ll):
     """
     # Solution, FlowRate, I_xx
 
-    return 2*Q, u_sol 
+    return 2*Q, u_sol, u_sol_coarse
 
