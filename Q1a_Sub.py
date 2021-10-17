@@ -140,10 +140,10 @@ def ChannelFlow(N_xi, N_eta, bb, hh, ll):
     u_sol_matrix = u_sol.reshape((N_xi, N_eta)).T
 
     Q = 0.0
-    for k1 in range(N_xi):
-        for k2 in range(N_eta):
+    for k1 in range(N_xi-1):
+        for k2 in range(N_eta-1):
             Q_const = hh * (0.5 * bb + aa * d_eta * (k2))
-            Q = Q + (d_xi * d_eta * u_sol_matrix[k1,k2] * Q_const)
+            Q = Q + (d_xi * d_eta * 0.25 * (u_sol_matrix[k1,k2] + u_sol_matrix[k1+1,k2] + u_sol_matrix[k1,k2+1] + u_sol_matrix[k1+1,k2+1]) * Q_const)
     # print("Full Cross-sectional Q for N =", N_xi, "is:", 2*Q)
 
     xi_vec = np.arange(0, N_xi, 1) * d_xi
