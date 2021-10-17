@@ -14,7 +14,7 @@ from Q1a_Sub import ChannelFlow
 N = np.array([11, 21, 41])
 N_ref = 81
 # N = np.arange(11, 161, 10)
-bb = 0.5        # in x domain
+bb = 1.0        # in x domain
 hh = 1.0        # in y domain
 ll = 3.0
 Q = np.zeros(len(N), dtype=float)
@@ -24,13 +24,10 @@ Q[0], u_sol_0 = ChannelFlow(N_eta=N[0], N_xi=N[0], bb=bb, hh=hh, ll=ll)
 Q[1], u_sol_1 = ChannelFlow(N_eta=N[1], N_xi=N[1], bb=bb, hh=hh, ll=ll)
 Q[2], u_sol_2 = ChannelFlow(N_eta=N[2], N_xi=N[2], bb=bb, hh=hh, ll=ll)
 # Q[3], u_sol_3 = ChannelFlow(N_eta=N[3], N_xi=N[3], bb=bb, hh=hh, ll=ll)
-# Q[4], u_sol_4 = ChannelFlow(N_eta=N[4], N_xi=N[4], bb=bb, hh=hh, ll=ll)
 Q_ref, u_sol_5 = ChannelFlow(N_eta=N_ref, N_xi=N_ref, bb=bb, hh=hh, ll=ll)
-print(Q)
 u_sol_1_coarse = np.zeros((min(N)**2, min(N)**2))
 u_sol_2_coarse = np.zeros((min(N), min(N)))
 u_sol_3_coarse = np.zeros((min(N), min(N)))
-u_sol_4_coarse = np.zeros((min(N), min(N)))
 
 """
 print(u_sol_1_coarse.shape[0])
