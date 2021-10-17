@@ -14,7 +14,7 @@ from Q1a_Sub import ChannelFlow
 N = np.array([11, 21, 41])
 N_ref = 81
 # N = np.arange(11, 161, 10)
-bb = 1.0        # in x domain
+bb = 0.5        # in x domain
 hh = 1.0        # in y domain
 ll = 3.0
 Q = np.zeros(len(N), dtype=float)

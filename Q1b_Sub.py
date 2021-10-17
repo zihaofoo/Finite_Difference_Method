@@ -114,6 +114,7 @@ def Solver_Iter(Source_block, N_x, N_y, omega, method, N_iter):
 
     # N_iter = 10000
     u_sol = np.zeros((NumNodes,1), dtype=float)       # Vector of f (nx x ny, 1)
+
     # omega = 2.0/3
     # method = 'Jacobi'
     # method = 'Gauss'

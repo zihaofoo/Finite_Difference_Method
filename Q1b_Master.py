@@ -20,7 +20,7 @@ N_sol = np.arange(N_Iter)
 # err_sol = np.zeros((  ))
 N_x = np.array([25])                    # Number of nodes
 N_y = np.array([25])                   # Number of nodes
-omega = np.arange(0.1, 1.1, 0.1) 
+omega = np.arange(0.1, 1.0, 0.1) 
 method1 = 'Jacobi'
 
 fig, ax = plt.subplots()
