@@ -132,10 +132,14 @@ def Solver_Iter(Source_block, N_x, N_y, omega, method, N_iter):
         err_sol[t1] = linalg.norm(np.double(A @ u_sol - RHS), ord=2) 
 
     # Linear sparse solver (for checking only)
-    # u_sol = splinalg.spsolve(A,RHS)
+    """
+    u_sol_linear = splinalg.spsolve(A,RHS)
+    u_sol_linear = np.reshape(u_sol_linear,(u_sol_linear.size, 1))
+    err_linear = u_sol - u_sol_linear
+    print(linalg.norm(err_linear, ord=2))
+    """
 
     ## Plotting
-    """
     u_sol_matrix = u_sol.reshape((N_x, N_y))
     x_vec = np.arange(0, N_x, 1) * d_x
     y_vec = np.arange(0, N_y, 1) * d_y
@@ -143,6 +147,53 @@ def Solver_Iter(Source_block, N_x, N_y, omega, method, N_iter):
     cp = ax.contourf(x_vec, y_vec, u_sol_matrix)
     cbar = fig.colorbar(cp)
     plt.show()
-    """
+
     return u_sol, err_sol
 
+def Flux(u_sol, N_x, N_y): 
+    d_x  = 1.0/(N_x-1);         # delta x                     
+    d_y = 1.0/(N_y-1);          # delta y      
+    NumNodes = N_x * N_y;   
+    Node = np.arange(0, NumNodes, 1, dtype=float)
+    Node = Node.reshape((N_x, N_y)).T
+
+    # Bottom domain B'C'
+    flux_bottom = np.zeros(N_x, dtype=float)
+    for j1 in range(1,N_x-1):
+        j2 = 0                              # First row at the bottom
+        ANode_i1 = int(Node[j1,j2])         # Setting A_Matrix position for node i,j   
+        ANode_i2 = int(Node[j1,j2+1])       # Setting A_Matrix position for node i,j   
+        ANode_i3 = int(Node[j1,j2+2])       # Setting A_Matrix position for node i,j   
+        flux_bottom[j1] = -(1.5 / d_y) * u_sol[ANode_i1] + (2.0 / d_y) * u_sol[ANode_i2] - (0.5 / d_y) * u_sol[ANode_i3] 
+    # print(j1, "Bottom")
+
+    flux_top = np.zeros(N_x, dtype=float)
+    # Top domain A'D'
+    for j1 in range(1,N_x-1):    
+        j2 = N_y - 1
+        ANode_i1 = int(Node[j1,j2])       # Setting A_Matrix position for node i,j   
+        ANode_i2 = int(Node[j1,j2-1])       # Setting A_Matrix position for node i,j   
+        flux_top[j1] = (1.5 / d_y) * u_sol[ANode_i1] - (2.0 / d_y) * u_sol[ANode_i2] + (0.5 / d_y) * u_sol[ANode_i3] 
+    # print(j1, "Top")
+
+    flux_left = np.zeros(N_y, dtype=float)
+    # Left domain A'B'
+    for j2 in range(1,N_y-1):    
+        j1 = 0
+        ANode_i1 = int(Node[j1,j2])       # Setting A_Matrix position for node i,j   
+        ANode_i2 = int(Node[j1+1,j2])       # Setting A_Matrix position for node i,j   
+        ANode_i3 = int(Node[j1+2,j2])       # Setting A_Matrix position for node i,j        
+        flux_left[j2] = -(1.5 / d_x) * u_sol[ANode_i1] + (2.0 / d_x) * u_sol[ANode_i2] - (0.5 / d_x) * u_sol[ANode_i3] 
+    # print(j2, "Left")
+
+    flux_right = np.zeros(N_y, dtype=float)
+    # Right domain C'D'
+    for j2 in range(1,N_y-1):
+        j1 = N_x - 1
+        ANode_i1 = int(Node[j1,j2])       # Setting A_Matrix position for node i,j   
+        ANode_i2 = int(Node[j1-1,j2])       # Setting A_Matrix position for node i,j   
+        ANode_i3 = int(Node[j1-2,j2])       # Setting A_Matrix position for node i,j    
+        flux_right[j2] = (1.5 / d_x) * u_sol[ANode_i1] - (2.0 / d_x) * u_sol[ANode_i2] + (0.5 / d_x) * u_sol[ANode_i3] 
+    # print(j2, "Right")
+
+    return flux_top, flux_bottom, flux_left, flux_right
