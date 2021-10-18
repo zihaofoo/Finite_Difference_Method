@@ -28,6 +28,9 @@ def ChannelFlow(N_xi, N_eta, bb, hh, ll, N_base):
     # hh = 1.0        # in y domain
     # ll = 3.0
     aa = np.sqrt(0.25 * ((ll - bb)**2) - (hh**2))
+    dd = 0.5 * (ll - bb)
+    tt = 0.05
+    y_bar = (hh**2.0) / (2 * dd + bb)
     d_xi  = 1.0/(N_xi-1);            # delta xi                     
     d_eta = 1.0/(N_eta-1);           # delta eta                      
     NumNodes = N_xi * N_eta;   
@@ -180,6 +183,7 @@ def ChannelFlow(N_xi, N_eta, bb, hh, ll, N_base):
     plt.show()
     """
     # Solution, FlowRate, I_xx
+    I_xx = ((y_bar**2.0) * bb * tt) + (2.0/3) * dd * tt * (hh*2.0 - (3.0 * hh * y_bar) + (3 * y_bar**2))
 
-    return 2*Q, u_sol, u_sol_coarse
+    return 2*Q, u_sol, u_sol_coarse, I_xx
 

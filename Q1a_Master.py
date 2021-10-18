@@ -12,6 +12,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from Q1a_Sub import ChannelFlow
 
+"""
+## Part 6
 N = np.array([11, 21, 41])
 N_base = N[0]
 N_ref = 81
@@ -55,4 +57,36 @@ ax.set_title('l = ' + str(ll) + ', b = ' + str(bb) + ', h =' + str(hh))
 ax.set_ybound(lower = 1E-01, upper = 1E-05)
 plt.legend()
 plt.savefig(fname= str(bb) + 'convergence.PDF')
+plt.show()
+
+"""
+# Part 7
+N = np.array([21])
+ll = 3.0
+bb = np.arange(0.0, 1.1, 0.1)        # in x domain
+hh = np.arange(0.1, 1.1, 0.1)        # in y domain
+N_bb, N_hh = (bb.shape[0], hh.shape[0])
+Q = np.zeros((N_bb, N_hh), dtype=float)
+I_xx = np.zeros((N_bb, N_hh), dtype=float)
+
+for i1 in range(N_bb):
+    for i2 in range(N_hh):
+        Q[i1,i2], u_sol_0, u_sol_0_coarse, I_xx[i1,i2] = ChannelFlow(N_eta=N[0], N_xi=N[0], bb=bb[i1], hh=hh[i2], ll=ll, N_base=N[0])
+Q = Q.T
+I_xx = I_xx.T
+bb_grid, hh_grid = np.meshgrid(bb, hh)
+bb_grid = bb_grid
+hh_grid = hh_grid
+
+# contour_ticks = np.arange(0.00, 0.22, 0.02)
+# color_ticks = np.arange(0.02, 0.22, 0.02)
+fig, ax = plt.subplots()
+# cs = ax.contour(x_grid, y_grid, u_sol, levels=color_ticks, colors='red', linestyles='dashed')
+# plt.clabel(cs, inline=True, fontsize=10)
+cp = ax.contourf(bb_grid, hh_grid, I_xx) # levels=contour_ticks)
+cbar = fig.colorbar(cp)
+plt.savefig("Fig1G_I.png", dpi=600)
+ax.set_xlabel("b")
+ax.set_ylabel("h")
+ax.set_title("Finite difference solution for I")
 plt.show()
