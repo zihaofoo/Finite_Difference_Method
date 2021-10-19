@@ -15,12 +15,12 @@ from Q1b_Sub import I_up, Solver_Iter, Flux, I_up, I_down, Plotting, MultiGrid
 Source_block = np.array([1, 7, 14, 16])
 # N_x = np.array([7, 13, 19, 25])                    # Number of nodes
 # N_y = np.array([7, 13, 19, 25])                   # Number of nodes
-N_Iter = 2
+N_Iter = 100
 N_sol = np.arange(N_Iter)
 N_x = int(25)                    # Number of nodes
 N_y = int(25)               # Number of nodes
 # omega = np.arange(1, 1.05, 0.05) 
-omega = np.array([0.5])
+omega = np.array([0.5, 0.8])
 method1 = 'Gauss'
 
 ## Convergence plot
@@ -59,13 +59,17 @@ np.savetxt('u_sol_2.csv', u_sol_fine)
 method = 'Gauss'
 nu_1 = int(1)
 nu_2 = int(1)
+nu_c = int(2)
+# nu_c = np.inf
 N_factor = int(2)
-
-u_sol, err_sol = MultiGrid(Source_block, N_x, N_y, omega, method, nu_1, nu_2, N_factor, N_Iter)
 
 # Error plot
 fig, ax = plt.subplots()
-cp = ax.plot(N_sol, err_sol, label = ('Omega =' + str(omega)))
+
+for i1 in range(omega.shape[0]):
+    u_sol, err_sol = MultiGrid(Source_block, N_x, N_y, omega[i1], method, nu_1, nu_2, nu_c, N_factor, N_Iter)
+    cp = ax.plot(N_sol, err_sol, label = ('Omega = ' + str(omega[i1])))
+
 ax.set_yscale('log')
 ax.set_title('Method = ' + method1)
 # ax.set_ybound(lower = 1E-12, upper = 1E+08)
