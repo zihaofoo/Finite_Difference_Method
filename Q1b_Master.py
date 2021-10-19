@@ -12,10 +12,10 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from Q1b_Sub import Solver_Iter, Flux
 
-Source_block = np.array([1, 6, 14, 16])
+Source_block = np.array([1, 6, 11, 14])
 # N_x = np.array([7, 13, 19, 25])                    # Number of nodes
 # N_y = np.array([7, 13, 19, 25])                   # Number of nodes
-N_Iter = 10000
+N_Iter = 5000
 N_sol = np.arange(N_Iter)
 N_x = np.array([25])                    # Number of nodes
 N_y = np.array([25])                   # Number of nodes
@@ -41,7 +41,6 @@ plt.show()
 ## Calculate flux boundary
 u_sol, err_sol = Solver_Iter(Source_block, int(N_x[0]), int(N_y[0]), omega[0], method1, N_Iter) 
 flux_top, flux_bottom, flux_left, flux_right = Flux(u_sol, int(N_x[0]), int(N_y[0]))
-
-np.savetxt("data1.csv", u_sol)
-np.savetxt("data2.csv", u_sol_linear)
+flux_net = np.concatenate((flux_left, flux_right, flux_bottom, flux_top), axis=0)
+np.savetxt("flux.csv", flux_net)
 

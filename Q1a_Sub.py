@@ -168,6 +168,7 @@ def ChannelFlow(N_xi, N_eta, bb, hh, ll, N_base):
     y_grid = hh * eta_grid
 
     """
+    # Plotting for visualization
     contour_ticks = np.arange(0.00, 0.22, 0.02)
     color_ticks = np.arange(0.02, 0.22, 0.02)
 

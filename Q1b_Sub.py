@@ -140,6 +140,7 @@ def Solver_Iter(Source_block, N_x, N_y, omega, method, N_iter):
     """
 
     ## Plotting
+    """
     u_sol_matrix = u_sol.reshape((N_x, N_y))
     x_vec = np.arange(0, N_x, 1) * d_x
     y_vec = np.arange(0, N_y, 1) * d_y
@@ -147,7 +148,7 @@ def Solver_Iter(Source_block, N_x, N_y, omega, method, N_iter):
     cp = ax.contourf(x_vec, y_vec, u_sol_matrix)
     cbar = fig.colorbar(cp)
     plt.show()
-
+    """
     return u_sol, err_sol
 
 def Flux(u_sol, N_x, N_y): 
@@ -173,6 +174,7 @@ def Flux(u_sol, N_x, N_y):
         j2 = N_y - 1
         ANode_i1 = int(Node[j1,j2])       # Setting A_Matrix position for node i,j   
         ANode_i2 = int(Node[j1,j2-1])       # Setting A_Matrix position for node i,j   
+        ANode_i3 = int(Node[j1,j2-2])       # Setting A_Matrix position for node i,j   
         flux_top[j1] = (1.5 / d_y) * u_sol[ANode_i1] - (2.0 / d_y) * u_sol[ANode_i2] + (0.5 / d_y) * u_sol[ANode_i3] 
     # print(j1, "Top")
 
