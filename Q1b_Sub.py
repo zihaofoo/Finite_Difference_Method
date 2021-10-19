@@ -151,6 +151,67 @@ def Solver_Iter(Source_block, N_x, N_y, omega, method, N_iter):
     """
     return u_sol, err_sol
 
+def Plotting(u_sol, N_x, N_y):
+    N_x = int(N_x)
+    N_y = int(N_y)
+    d_x  = 1.0/(N_x-1);         # delta x                     
+    d_y = 1.0/(N_y-1);          # delta y  
+    ## Plotting
+    u_sol_matrix = u_sol.reshape((N_x, N_y))
+    x_vec = np.arange(0, N_x, 1) * d_x
+    y_vec = np.arange(0, N_y, 1) * d_y
+    fig, ax = plt.subplots()
+    cp = ax.contourf(x_vec, y_vec, u_sol_matrix)
+    cbar = fig.colorbar(cp)
+    plt.show()
+
+    return 
+
+def TwoGrid(Source_block, N_x, N_y, omega, method, N_iter): 
+
+    return  # u_sol, err_sol
+
+def I_up(u_sol, N_x, N_y, skip_factor=int(2)): 
+    # u_sol on skip_factor * h, u_sol_fine on h
+    N_x = int(N_x)
+    N_y = int(N_y)
+    d_x  = 1.0/(N_x-1);         # delta x                     
+    d_y = 1.0/(N_y-1);          # delta y                     
+    NumNodes = N_x * N_y;   
+    Node = np.arange(0, NumNodes, 1, dtype=float)
+    Node = Node.reshape((N_x, N_y)).T
+
+    u_sol_fine = []
+
+    for k1 in range(0, N_x, skip_factor):
+        for k2 in range(0, N_y, skip_factor):
+            ANode_i = Node[k2,k1];                       # Setting A_Matrix position for node i,j   
+            ANode_i = int(ANode_i)
+            u_sol_fine.append(u_sol[ANode_i])
+    u_sol_coarse = np.array(u_sol_fine)
+    return 0
+
+def I_down(u_sol, N_x, N_y, skip_factor=int(2)):
+    # u_sol on h, u_sol_coarse on skip_factor * h
+    N_x = int(N_x)
+    N_y = int(N_y)
+    d_x  = 1.0/(N_x-1);         # delta x                     
+    d_y = 1.0/(N_y-1);          # delta y                     
+    NumNodes = N_x * N_y;   
+    Node = np.arange(0, NumNodes, 1, dtype=float)
+    Node = Node.reshape((N_x, N_y)).T
+
+    u_sol_coarse = []
+
+    for k1 in range(0, N_x, skip_factor):
+        for k2 in range(0, N_y, skip_factor):
+            ANode_i = Node[k2,k1];                       # Setting A_Matrix position for node i,j   
+            ANode_i = int(ANode_i)
+            u_sol_coarse.append(u_sol[ANode_i])
+    u_sol_coarse = np.array(u_sol_coarse)
+
+    return u_sol_coarse
+
 def Flux(u_sol, N_x, N_y): 
     d_x  = 1.0/(N_x-1);         # delta x                     
     d_y = 1.0/(N_y-1);          # delta y      
