@@ -150,7 +150,6 @@ def Solver_Iter(Source_block, N_x, N_y, omega, method, N_iter):
     plt.show()
     """
 
-
     return u_sol, err_sol
 
 def Plotting(u_sol, N_x, N_y):
@@ -210,7 +209,8 @@ def MultiGrid_Sub(u_sol, Source_block, N_x, N_y, omega, method, nu_1, nu_2, nu_c
     # print('Inception')
     # nu_c = int(2/2)
     if N_x == N_min: 
-        u_sol = Solver_Relax(u_sol, Source_block, N_x, N_y, omega, method, N_iter=nu_c, RHS=RHS)      # Relax by nu 1 times
+        # print("Bottom layer")
+        u_sol = Solver_Relax(u_sol, Source_block, N_x, N_y, omega, method, N_iter=int(nu_c), RHS=RHS)      # Relax by nu 1 times
     else:
         u_sol = Solver_Relax(u_sol, Source_block, N_x, N_y, omega, method, N_iter=nu_1, RHS=RHS)      # Relax by nu 1 times
 
@@ -228,7 +228,7 @@ def MultiGrid_Sub(u_sol, Source_block, N_x, N_y, omega, method, nu_1, nu_2, nu_c
         u_sol = u_sol + err_h
 
     if N_x == N_min:
-        u_sol = Solver_Relax(u_sol, Source_block, N_x, N_y, omega, method, N_iter=nu_c, RHS=RHS)      # Relax by nu 2 times
+        u_sol = Solver_Relax(u_sol, Source_block, N_x, N_y, omega, method, N_iter=int(nu_c), RHS=RHS)      # Relax by nu 1 times
     else:
         u_sol = Solver_Relax(u_sol, Source_block, N_x, N_y, omega, method, N_iter=nu_2, RHS=RHS)      # Relax by nu 2 times
 
@@ -380,26 +380,25 @@ def Solver_Relax(u_sol_initial, Source_block, N_x, N_y, omega, method, N_iter, m
     if mode == "Residual":
         return (RHS - A @ u_sol)
 
-    # if N_iter != np.inf:
-    # print("Running iterative solver")
-    D = np.diag(np.diag(A.toarray()))
-    L = np.tril(-A.toarray(), k=-1)
-    U = np.triu(-A.toarray(), k=1)
-    I = np.identity(NumNodes, dtype=float)
-    if method == 'Jacobi':
-        D_inv = linalg.inv(D)
-        R = I - (D_inv @ A)    
-        f = D_inv @ RHS
-    elif method == 'Gauss':
-        D_L_inv = linalg.inv(D - L)
-        R = D_L_inv @ U   
-        f = D_L_inv @ RHS
-    for t1 in range(N_iter):
-        u_sol = (omega * ((R @ u_sol) + f)) + ((1.0 - omega) * u_sol)
-
-    #else:
+    if N_iter == 0:
         # print("Running exact solver")
-        # u_sol = splinalg.spsolve(A,RHS)
+        u_sol = splinalg.spsolve(A,RHS)
+    else: 
+        # print("Running iterative solver")
+        D = np.diag(np.diag(A.toarray()))
+        L = np.tril(-A.toarray(), k=-1)
+        U = np.triu(-A.toarray(), k=1)
+        I = np.identity(NumNodes, dtype=float)
+        if method == 'Jacobi':
+            D_inv = linalg.inv(D)
+            R = I - (D_inv @ A)    
+            f = D_inv @ RHS
+        elif method == 'Gauss':
+            D_L_inv = linalg.inv(D - L)
+            R = D_L_inv @ U   
+            f = D_L_inv @ RHS
+        for t1 in range(N_iter):
+            u_sol = (omega * ((R @ u_sol) + f)) + ((1.0 - omega) * u_sol)       
     
     return u_sol
 
