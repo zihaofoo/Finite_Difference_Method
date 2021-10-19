@@ -173,10 +173,8 @@ def TwoGrid(Source_block, N_x, N_y, omega, method, N_iter):
 
 def I_up(u_sol, N_x, N_y, skip_factor=int(2)): 
     # u_sol on skip_factor * h, u_sol_fine on h
-    N_x = int(N_x)
-    N_y = int(N_y)
-    d_x  = 1.0/(N_x-1);         # delta x                     
-    d_y = 1.0/(N_y-1);          # delta y                     
+    N_x = int(skip_factor * N_x)        # dimension of fine mesh
+    N_y = int(skip_factor * N_y)        # dimension of fine mesh                  
     NumNodes = N_x * N_y;   
     Node = np.arange(0, NumNodes, 1, dtype=float)
     Node = Node.reshape((N_x, N_y)).T
@@ -194,9 +192,7 @@ def I_up(u_sol, N_x, N_y, skip_factor=int(2)):
 def I_down(u_sol, N_x, N_y, skip_factor=int(2)):
     # u_sol on h, u_sol_coarse on skip_factor * h
     N_x = int(N_x)
-    N_y = int(N_y)
-    d_x  = 1.0/(N_x-1);         # delta x                     
-    d_y = 1.0/(N_y-1);          # delta y                     
+    N_y = int(N_y)                
     NumNodes = N_x * N_y;   
     Node = np.arange(0, NumNodes, 1, dtype=float)
     Node = Node.reshape((N_x, N_y)).T
