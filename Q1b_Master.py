@@ -71,9 +71,9 @@ for i1 in range(omega.shape[0]):
 """
 
 for i2 in range(N_factor.shape[0]):
-    u_sol, err_sol = MultiGrid(Source_block, N_x, N_y, omega[0], method1, nu_1, nu_2, nu_c, int(N_factor[i2]), N_Iter)
-    print(i2)
-    cp = ax.plot(N_sol, err_sol, label = ('Omega = ' + str(omega[0])))
+    # u_sol, err_sol = MultiGrid(Source_block, N_x, N_y, omega[0], method1, nu_1, nu_2, nu_c, int(N_factor[i2]), N_Iter)
+    # print(i2)
+    # cp = ax.plot(N_sol, err_sol, label = ('Omega = ' + str(omega[0])))
     u_sol, err_sol = MultiGrid(Source_block, N_x, N_y, omega[1], method1, nu_1, nu_2, nu_c, int(N_factor[i2]), N_Iter)
     print(i2)
     cp = ax.plot(N_sol, err_sol, label = ('Omega = ' + str(omega[1])))
