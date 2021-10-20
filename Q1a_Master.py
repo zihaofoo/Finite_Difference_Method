@@ -72,6 +72,7 @@ I_xx = np.zeros((N_bb, N_hh), dtype=float)
 for i1 in range(N_bb):
     for i2 in range(N_hh):
         Q[i1,i2], u_sol_0, u_sol_0_coarse, I_xx[i1,i2] = ChannelFlow(N_eta=N[0], N_xi=N[0], bb=bb[i1], hh=hh[i2], ll=ll, N_base=N[0])
+
 Q = Q.T
 I_xx = I_xx.T
 bb_grid, hh_grid = np.meshgrid(bb, hh)
@@ -83,10 +84,19 @@ hh_grid = hh_grid
 fig, ax = plt.subplots()
 # cs = ax.contour(x_grid, y_grid, u_sol, levels=color_ticks, colors='red', linestyles='dashed')
 # plt.clabel(cs, inline=True, fontsize=10)
-cp = ax.contourf(bb_grid, hh_grid, I_xx) # levels=contour_ticks)
-cbar = fig.colorbar(cp)
-plt.savefig("Fig1G_I.png", dpi=600)
-ax.set_xlabel("b")
-ax.set_ylabel("h")
-ax.set_title("Finite difference solution for I")
+# cp = ax.contourf(bb_grid, hh_grid, I_xx) # levels=contour_ticks)
+# cbar = fig.colorbar(cp)
+# plt.savefig("Fig1G_I.png", dpi=600)
+# ax.set_xlabel("b")
+# ax.set_ylabel("h")
+# ax.set_title("Finite difference solution for I")
+
+# print(Q[0,:].shape, I_xx[0,:].shape)
+
+for j1 in range(N_bb):
+    ax.scatter(Q[:,j1], I_xx[:,j1])
+
+ax.set_xlabel('Flow Rate, Q')
+ax.set_ylabel('Moment of Inertia, I')
 plt.show()
+

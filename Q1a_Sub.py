@@ -183,8 +183,7 @@ def ChannelFlow(N_xi, N_eta, bb, hh, ll, N_base):
     ax.set_title("Finite difference solution for N = 21")
     plt.show()
     """
-    # Solution, FlowRate, I_xx
-    I_xx = ((y_bar**2.0) * bb * tt) + (2.0/3) * dd * tt * (hh*2.0 - (3.0 * hh * y_bar) + (3 * y_bar**2))
-
+    I_xx = (y_bar**2.0) * bb * tt + (2.0/3) * dd * tt * (hh**2.0 - (3.0 * hh * y_bar) + (3 * y_bar**2))
+    
     return 2*Q, u_sol, u_sol_coarse, I_xx
 
